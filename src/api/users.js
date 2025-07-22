@@ -1,4 +1,3 @@
-// src/api/users.js
 import axios from "axios";
 
 export const getAllUsers = async () => {
