@@ -1,4 +1,3 @@
-// src/components/Sidebar.jsx
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
@@ -12,12 +11,12 @@ const Sidebar = () => {
       <nav className="flex flex-col space-y-2">
         {!user && (
           <>
-          <NavLink to="/dashboard" className="hover:bg-gray-700 px-3 py-2 rounded">
+            <NavLink to="/dashboard" className="hover:bg-gray-700 px-3 py-2 rounded">
               Dashboard
             </NavLink>
-          <h2 className="text-gray-400 text-xs uppercase tracking-widest font-semibold mt-6 mb-3">
-            Authentication
-          </h2>
+            <h2 className="text-gray-400 text-xs uppercase tracking-widest font-semibold mt-6 mb-3">
+              Authentication
+            </h2>
             <NavLink to="/login" className="hover:bg-gray-700 px-3 py-2 rounded">
               Login
             </NavLink>
@@ -32,8 +31,8 @@ const Sidebar = () => {
               Dashboard
             </NavLink>
             <h2 className="text-gray-400 text-xs uppercase tracking-widest font-semibold mt-6 mb-3">
-            Utilities
-          </h2>
+              Utilities
+            </h2>
             <NavLink to="/users" className="hover:bg-gray-700 px-3 py-2 rounded">
               Users
             </NavLink>
@@ -42,6 +41,9 @@ const Sidebar = () => {
             </NavLink>
             <NavLink to="/recipes" className="hover:bg-gray-700 px-3 py-2 rounded">
               Recipes
+            </NavLink>
+            <NavLink to="/meallogs" className="hover:bg-gray-700 px-3 py-2 rounded">
+              Meal Logs
             </NavLink>
           </>
         )}
