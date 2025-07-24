@@ -23,6 +23,9 @@ const Sidebar = () => {
             <NavLink to="/register" className="hover:bg-gray-700 px-3 py-2 rounded">
               Register
             </NavLink>
+            <NavLink to="/otp-login" className="hover:bg-gray-700 px-3 py-2 rounded">
+              OTP Login
+            </NavLink>
           </>
         )}
         {user && (
@@ -44,6 +47,12 @@ const Sidebar = () => {
             </NavLink>
             <NavLink to="/meallogs" className="hover:bg-gray-700 px-3 py-2 rounded">
               Meal Logs
+            </NavLink>
+            <NavLink to="/health-profile" className="hover:bg-gray-700 px-3 py-2 rounded">
+              Health Profile
+            </NavLink>
+            <NavLink to="/goals" className="hover:bg-gray-700 px-3 py-2 rounded">
+              Goal Tracking
             </NavLink>
           </>
         )}

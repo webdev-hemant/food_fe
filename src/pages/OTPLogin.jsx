@@ -1,94 +1,81 @@
-import React, { useState, useContext } from "react";
-import AuthContext from "../context/AuthContext";
+import React, { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const OTPLogin = () => {
-  const [step, setStep] = useState(1);
-  const [emailOrUsername, setEmailOrUsername] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSendOtp = async () => {
+  const sendOtp = async () => {
     try {
       const res = await axios.post("http://localhost:5000/api/auth/sendOtpForLogin", {
-        emailOrUsername,
+        mobileNumber,
       });
-      if (res.data.success) {
-        setStep(2);
-        alert("OTP sent to your email.");
-      }
+      alert("OTP sent successfully: " + res.data.otp); // Dev only
+      setOtpSent(true);
     } catch (err) {
-      alert("Error sending OTP: " + err?.response?.data?.message || err.message);
+      console.error(err);
+      alert("Failed to send OTP");
     }
   };
 
-  const handleVerifyOtp = async () => {
+  const verifyOtp = async () => {
     try {
       const res = await axios.post("http://localhost:5000/api/auth/verifyOtpForLogin", {
-        emailOrUsername,
+        mobileNumber,
         otp,
       });
-      if (res.data.success && res.data.token) {
-        login(res.data.user, res.data.token);
-        toast.success("Logged in successfully!");
 
-        navigate("/dashboard");
-      } else {
-        alert("Invalid OTP or login failed.");
-      }
+      const { token, mobileUser } = res.data;
+      login(mobileUser, token);
+      alert("Login successful");
+      navigate("/dashboard");
     } catch (err) {
-      alert("Error verifying OTP: " + err?.response?.data?.message || err.message);
+      console.error(err);
+      alert("Invalid OTP");
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600">
-      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center mb-6 text-indigo-600">
-          OTP Login
-        </h2>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Login with OTP</h2>
 
-        {step === 1 && (
+        {!otpSent ? (
           <>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Email or Username
-            </label>
+            <label className="block text-gray-700 mb-2">Mobile Number</label>
             <input
               type="text"
-              value={emailOrUsername}
-              onChange={(e) => setEmailOrUsername(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter your email or username"
+              className="w-full p-2 border border-gray-300 rounded mb-4"
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
             />
             <button
-              onClick={handleSendOtp}
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+              onClick={sendOtp}
             >
               Send OTP
             </button>
           </>
-        )}
-
-        {step === 2 && (
+        ) : (
           <>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Enter OTP
-            </label>
+            <label className="block text-gray-700 mb-2">Enter OTP</label>
             <input
               type="text"
+              className="w-full p-2 border border-gray-300 rounded mb-4"
+              placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter OTP"
             />
             <button
-              onClick={handleVerifyOtp}
-              className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
+              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+              onClick={verifyOtp}
             >
-              Verify & Login
+              Verify OTP & Login
             </button>
           </>
         )}
