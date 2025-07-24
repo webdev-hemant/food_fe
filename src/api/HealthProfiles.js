@@ -1,10 +1,10 @@
-import axios from "axios";
+// api/HealthProfiles.js
 
-const API_BASE = "http://localhost:5000/api/healthProfile";
+import axios from "axios";
 
 export const fetchHealthProfile = async () => {
   const token = localStorage.getItem("token");
-  const res = await axios.get(`${API_BASE}/get-profile`, {
+  const res = await axios.get("http://localhost:5000/api/healthProfile/get-profile", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -14,11 +14,20 @@ export const fetchHealthProfile = async () => {
 
 export const updateHealthProfile = async (updatedData) => {
   const token = localStorage.getItem("token");
-  const res = await axios.put(`${API_BASE}/update`, updatedData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-  return res.data;
+  try {
+    const res = await axios.post(
+      "http://localhost:5000/api/healthProfile/update",
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    console.error("Update Error:", error.response?.data || error.message);
+    throw error;
+  }
 };
